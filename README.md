@@ -15,16 +15,18 @@
 欢迎`fork`以及`star`
 <hr />
 ## 实现的功能  
+
 1. 利用PageHelper插件分页显示数据，如上图  
 2. 新增商品数据  
+
 <img src="http://chuantu.biz/t6/135/1510280814x3396406237.png" />  
 其中商品名、货号需要检测格式是否符合要求以及数据库中是否存在，这里用到js正则表达式、JSR303。  
 3. 修改商品信息  
-![c]({{ "/img/post/commodity-management/3.png" | prepend: site.baseurl }} )  
+<img src="http://chuantu.biz/t6/135/1510280890x3396406237.png" />  
 修改需要根据欲修改的商品'id'从数据库中查找，返回相应的信息，如上图中的input框内默认值  
 4. 删除  
 删除可以删除单条商品数据，也可以多选删除  
-![d]({{ "/img/post/commodity-management/4.png" | prepend: site.baseurl }} )  
+<img src="http://chuantu.biz/t6/135/1510280911x3396406237.png" />  
 
 ## SSM整合
 [上一篇博客](https://niantianlei.github.io/2017/10/13/SSM/)已经有了这部分的介绍，只是添加jar包的方式不一样（一个手动添加一个Maven管理），配置文件是不变的，代码中也有详细注释。这里只做简单说明  
@@ -62,7 +64,7 @@
 直接用`@Autowired`注入一个CategoryMapper。  
 再调用其方法insertSelective插入种类数据（为方便初始化数据，可以在bean里添加有参构造器，但同时要写上无参构造器）。   
 此时可以去数据库中查看是否已将数据添加，来检验到目前为止的工作是否正确。  
-![e]({{ "/img/post/commodity-management/5.png" | prepend: site.baseurl }} )  
+<img src="http://chuantu.biz/t6/135/1510280933x3396406237.png" />  
 成功显示数据。  
 插入商品数据测试：  
 利用for循环批量插入，使用UUID设置货号信息，保证随机性。  
