@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+	
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+  <!-- 去除注释 -->
+  <commentGenerator>
+  	<property name="suppressAllComments" value="true" />
+  </commentGenerator>
+  <!-- 配置数据库连接 -->
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost:3306/commodity_management"
+        userId="root"
+        password="admin">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+	
+	<!-- 制定bean生成位置 -->
+    <javaModelGenerator targetPackage="com.nian.bean" targetProject=".\src\main\java">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+	<!-- 制定sql映射文件生成位置 -->
+    <sqlMapGenerator targetPackage="mapper"  targetProject=".\src\main\resources">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+	<!-- mapper接口声称位置 -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.nian.dao"  targetProject=".\src\main\java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+	<!-- 连接数据库中的表 -->
+    <table tableName="products" domainObjectName="Products" >
+    </table>
+        <table tableName="category" domainObjectName="Category" >
+    </table>
+  </context>
+</generatorConfiguration>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nian.dao.ProductsMapper">
+  <resultMap id="BaseResultMap" type="com.nian.bean.Products">
+    <id column="pro_id" jdbcType="INTEGER" property="proId" />
+    <result column="pro_name" jdbcType="VARCHAR" property="proName" />
+    <result column="pro_state" jdbcType="CHAR" property="proState" />
+    <result column="pro_no" jdbcType="VARCHAR" property="proNo" />
+    <result column="pro_price" jdbcType="VARCHAR" property="proPrice" />
+    <result column="pro_number" jdbcType="VARCHAR" property="proNumber" />
+    <result column="d_id" jdbcType="INTEGER" property="dId" />
+  </resultMap>
+  <resultMap type="com.nian.bean.Products" id="WithCateResultMap">
+  	<id column="pro_id" jdbcType="INTEGER" property="proId" />
+    <result column="pro_name" jdbcType="VARCHAR" property="proName" />
+    <result column="pro_state" jdbcType="CHAR" property="proState" />
+    <result column="pro_no" jdbcType="VARCHAR" property="proNo" />
+    <result column="pro_price" jdbcType="VARCHAR" property="proPrice" />
+    <result column="pro_number" jdbcType="VARCHAR" property="proNumber" />
+    <result column="d_id" jdbcType="INTEGER" property="dId" />
+    <!-- 指定联合查询出的“种类”字段的封装 -->
+    <association property="category" javaType="com.nian.bean.Category">
+    	<id column="cate_id" property="cateId"/>
+    	<result column="cate_name" property="cateName"/>
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    pro_id, pro_name, pro_state, pro_no, pro_price, pro_number, d_id
+  </sql>
+  
+  <sql id="WithCate_Column_List">
+  	e.pro_id, e.pro_name, e.pro_state, e.pro_no, e.pro_price, e.pro_number, e.d_id,d.cate_id,d.cate_name
+  </sql>
+
+  <!-- 查询商品时要带着种类信息  -->
+  <select id="selectByExampleWithCate" resultMap="WithCateResultMap">
+	   select
+	    <if test="distinct">
+	      distinct
+	    </if>
+	    <include refid="WithCate_Column_List" />
+		FROM products e
+		left join category d on e.`d_id`=d.`cate_id`
+	    <if test="_parameter != null">
+	      <include refid="Example_Where_Clause" />
+	    </if>
+	    <if test="orderByClause != null">
+	      order by ${orderByClause}
+	    </if>
+	    <!-- 如果未指定查询顺序，则以prducts表的主键id排序  -->
+	    <if test="orderByClause == null">
+	      order by e.pro_id
+	    </if>
+  </select>
+  <select id="selectByPrimaryKeyWithCate" resultMap="WithCateResultMap">
+   	select 
+    <include refid="WithCate_Column_List" />
+    FROM products e
+	left join category d on e.`d_id`=d.`cate_id`
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </select>
+  
+
+  <select id="selectByExample" parameterType="com.nian.bean.ProductsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from products
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from products
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from products
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.nian.bean.ProductsExample">
+    delete from products
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.nian.bean.Products">
+    insert into products (pro_id, pro_name, pro_state, 
+      pro_no, pro_price, pro_number, 
+      d_id)
+    values (#{proId,jdbcType=INTEGER}, #{proName,jdbcType=VARCHAR}, #{proState,jdbcType=CHAR}, 
+      #{proNo,jdbcType=VARCHAR}, #{proPrice,jdbcType=VARCHAR}, #{proNumber,jdbcType=VARCHAR}, 
+      #{dId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nian.bean.Products">
+    insert into products
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="proId != null">
+        pro_id,
+      </if>
+      <if test="proName != null">
+        pro_name,
+      </if>
+      <if test="proState != null">
+        pro_state,
+      </if>
+      <if test="proNo != null">
+        pro_no,
+      </if>
+      <if test="proPrice != null">
+        pro_price,
+      </if>
+      <if test="proNumber != null">
+        pro_number,
+      </if>
+      <if test="dId != null">
+        d_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="proId != null">
+        #{proId,jdbcType=INTEGER},
+      </if>
+      <if test="proName != null">
+        #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proState != null">
+        #{proState,jdbcType=CHAR},
+      </if>
+      <if test="proNo != null">
+        #{proNo,jdbcType=VARCHAR},
+      </if>
+      <if test="proPrice != null">
+        #{proPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="proNumber != null">
+        #{proNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="dId != null">
+        #{dId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.nian.bean.ProductsExample" resultType="java.lang.Long">
+    select count(*) from products
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update products
+    <set>
+      <if test="record.proId != null">
+        pro_id = #{record.proId,jdbcType=INTEGER},
+      </if>
+      <if test="record.proName != null">
+        pro_name = #{record.proName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.proState != null">
+        pro_state = #{record.proState,jdbcType=CHAR},
+      </if>
+      <if test="record.proNo != null">
+        pro_no = #{record.proNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.proPrice != null">
+        pro_price = #{record.proPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.proNumber != null">
+        pro_number = #{record.proNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dId != null">
+        d_id = #{record.dId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update products
+    set pro_id = #{record.proId,jdbcType=INTEGER},
+      pro_name = #{record.proName,jdbcType=VARCHAR},
+      pro_state = #{record.proState,jdbcType=CHAR},
+      pro_no = #{record.proNo,jdbcType=VARCHAR},
+      pro_price = #{record.proPrice,jdbcType=VARCHAR},
+      pro_number = #{record.proNumber,jdbcType=VARCHAR},
+      d_id = #{record.dId,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nian.bean.Products">
+    update products
+    <set>
+      <if test="proName != null">
+        pro_name = #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proState != null">
+        pro_state = #{proState,jdbcType=CHAR},
+      </if>
+      <if test="proNo != null">
+        pro_no = #{proNo,jdbcType=VARCHAR},
+      </if>
+      <if test="proPrice != null">
+        pro_price = #{proPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="proNumber != null">
+        pro_number = #{proNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="dId != null">
+        d_id = #{dId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nian.bean.Products">
+    update products
+    set pro_name = #{proName,jdbcType=VARCHAR},
+      pro_state = #{proState,jdbcType=CHAR},
+      pro_no = #{proNo,jdbcType=VARCHAR},
+      pro_price = #{proPrice,jdbcType=VARCHAR},
+      pro_number = #{proNumber,jdbcType=VARCHAR},
+      d_id = #{dId,jdbcType=INTEGER}
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </update>
+</mapper>
