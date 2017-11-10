@@ -4,17 +4,20 @@
 
 ---------
 
+这个说明文档没怎么排版，可以到[我的博客](https://niantianlei.github.io/2017/11/05/commodity-management/)查看！  
+
+
 一个简单的商品管理的系统，使用的技术有：Maven+Spring+SpringMVC+MyBatis，前端框架boostrap。数据库使用mysql。  
 用到两个表：一个商品信息表，一个种类表。使用外键关联将两个表联结起来。  
 页面如下：  
-![a]({{ "/img/post/commodity-management/1.png" | prepend: site.baseurl }} )  
+<img src="http://chuantu.biz/t6/135/1510280775x3396406237.png" />  
 完整代码已上传github，地址为[https://github.com/niantianlei/commodity-management](https://github.com/niantianlei/commodity-management)  
 欢迎`fork`以及`star`
 <hr />
 ## 实现的功能  
 1. 利用PageHelper插件分页显示数据，如上图  
 2. 新增商品数据  
-![b]({{ "/img/post/commodity-management/2.png" | prepend: site.baseurl }} )  
+<img src="http://chuantu.biz/t6/135/1510280814x3396406237.png" />  
 其中商品名、货号需要检测格式是否符合要求以及数据库中是否存在，这里用到js正则表达式、JSR303。  
 3. 修改商品信息  
 ![c]({{ "/img/post/commodity-management/3.png" | prepend: site.baseurl }} )  
