@@ -22,7 +22,7 @@
       <property name="forceBigDecimals" value="false" />
     </javaTypeResolver>
 	
-	<!-- 制定bean生成位置 -->
+	<!-- 指定bean生成位置 -->
     <javaModelGenerator targetPackage="com.nian.bean" targetProject=".\src\main\java">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
